@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 #http://flask-sqlalchemy.pocoo.org/2.3/
 #
+import sqlalchemy.types as types
+#from flask_sqlalchemy import types
 
 GENDER=(
     ('M', 'Male'),
@@ -22,10 +24,10 @@ class ChoiceType (types.TypeDecorator):
 
     def __init__ (self, choices, **kw):
         self.choices=dict(choices)
-        super(ChoiceType, self).__init__(*kw)
+        super(ChoiceType, self).__init__(**kw)
 
     def process_bind_param(self, value, dialect):
-        return [k for k, v in self.choices.iteritems() if v==value][0]
+        return [k for k, v in self.choices.items() if v==value][0]
 
     def process_result_value(self, value, dialect):
         return self.choices.get(value, value)
@@ -49,61 +51,53 @@ class User (db.Model):
     rating=db.Column(db.Float, unique=False, nullable=True)
     phone=db.Column(db.String, unique=True, nullable=True)
     details=db.Column(db.String, unique=False, nullable=True)
-    gender=db.Column(ChoiceType, choices=GENDER, unique=False, nullable=False)
+    gender=db.Column(ChoiceType(choices=GENDER), unique=False, nullable=False)
     active=db.Column(db.Boolean, index=True, unique=False, nullable=False, default=True)
-    role=db.Column(ChoiceType, choices=ROLE, Index=True, unique=False, nullable=False)
+    role=db.Column(ChoiceType(choices=ROLE), index=True, unique=False, nullable=False)
+    address=db.Column(db.String, index=True, unique=False, nullable=True)
     #ForeignKeys
     rel_ann=db.relationship('Announcement', back_populates='rel_user_id')
 
     def __repr__(self):
         return '<User: {} {}, login {}, email {}>'.format (self.name, self.surname, self.login, self.email)
 
-"""
-class Ann_type (db.Model):
-    id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    name=db.Column(db.String, primary_key=False, unique=True, nullable=False)
-    description=db.Column(db.String, primary_key=False, unique=True, nullable=False)
-    #ForeignKeys
-    announcements = db.relationship('Announcement')
 
-    def __repr__(self):
-        pass
-"""
 
 class Announcement (db.Model):
     __tablename__='Announcement'
     id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    user_id=db.Column(db.Integer, db.ForeignKey('User.id'), primary_key=False, unique=False, nullable=False)
-    type_id=db.Column(db.Enum, primary_key=False, unique=False, nullable=False)
-    head=db.Column(db.String, primary_key=False, unique=False, nullable=False)
-    text=db.Column(db.Text, primary_key=False, unique=False, nullable=False)
-    tool_id=db.Column(db.Integer, db.ForeignKey('Tool.id'), primary_key=False, unique=False, nullable=False)
-    #valid=db.Column(db.Boolean, primary_key=False, unique=False, nullable=False) #или ограничиться датой удаления?
-    pub_datetime=db.Column(db.DateTime, primary_key=False, unique=False, nullable=False)
-    arch_datetime=db.Column(db.DateTime, primary_key=False, unique=False, nullable=True)
-    price=db.Column(db.Float, primary_key=False, unique=False, nullable=False)
+    user_id=db.Column(db.Integer, db.ForeignKey('User.id'), index=True, unique=False, nullable=False)
+    type_id=db.Column(ChoiceType(choices=ANN_TYPE), index=True, unique=False, nullable=False)
+    head=db.Column(db.String, unique=False, nullable=False)
+    text=db.Column(db.Text, unique=False, nullable=False)
+    tool_id=db.Column(db.Integer, db.ForeignKey('Tool.id'), index=True, unique=False, nullable=False)
+    pub_datetime=db.Column(db.DateTime, unique=False, nullable=False)
+    arch_datetime=db.Column(db.DateTime, unique=False, nullable=True)
+    price=db.Column(db.Float, unique=False, nullable=False)
+    address=db.Column(db.String, index=True, unique=False, nullable=False)
     #ForeignKeys
     rel_user_id=db.relationship('User', back_populates='rel_ann')
     rel_tool_id=db.relationship('Tool', back_populates='rel_ann')
 
 
     def __repr__(self):
-         return '<Announcement: {} {}, head {}, user {}>'.format (self.id, self.type, self.head, self.user_id)
+        return '<Announcement: {} {}, head {}, user {}>'.format (self.id, self.type, self.head, self.user_id)
 
 
 
 class Tool (db.Model):
     __tablename__='Tool'
     id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    name=db.Column(db.String, primary_key=False, unique=True, nullable=False)
-    description=db.Column(db.String, primary_key=False, unique=True, nullable=True)
-    parent_id=db.Column(db.String, db.ForeignKey('Tool.id'), primary_key=False, unique=False, nullable=False)
+    name=db.Column(db.String, unique=True, nullable=False)
+    description=db.Column(db.String, unique=True, nullable=True)
+    parent_id=db.Column(db.String, db.ForeignKey('Tool.id'), unique=False, nullable=False)
     #ForeignKeys
     rel_ann=db.relationship('Announcement', back_populates='rel_tool_id')
     #parent_tool=db.relationship('Tool')
 
     def __repr__(self):
-        pass
+        return '<Tool: id {} name {} parent {}>'.format (self.id, self.name, self.parent_id)
+        
 
 
 """
