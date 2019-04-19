@@ -4,6 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy.types as types
 #from flask_sqlalchemy import types
 
+from flask_login import UserMixin
+#UserMixin for working with authentification and login processes
+
+from werkzeug.security import generate_password_hash, check_password_hash
+#for password encription
+
 GENDER=(
     ('M', 'Male'),
     ('F', 'Female'),
@@ -14,7 +20,7 @@ ANN_TYPE=(
     ('G', 'Get'))
     
 ROLE=(
-    ('A', 'Administrator'),
+    ('A', 'Admin'),
     ('U', 'User'))
 
 
@@ -40,7 +46,7 @@ class ChoiceType (types.TypeDecorator):
 db=SQLAlchemy()
 
 
-class User (db.Model):
+class User (db.Model, UserMixin):
     __tablename__='User'
     id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     name=db.Column(db.String, unique=False, nullable=False)
@@ -58,9 +64,18 @@ class User (db.Model):
     #ForeignKeys
     rel_ann=db.relationship('Announcement', back_populates='rel_user_id')
 
+    def ser_password (self, password):
+        self.password=generate_password_hash (password)
+
+    def check_password (self, password):
+        return check_password_hash (self.password, password)
+
     def __repr__(self):
         return '<User: {} {}, login {}, email {}>'.format (self.name, self.surname, self.login, self.email)
 
+    @property
+    def is_admin(self):
+        return self.role=='Admin'
 
 
 class Announcement (db.Model):

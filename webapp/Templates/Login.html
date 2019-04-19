@@ -5,35 +5,47 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
                 body {
                  background: #FFC817; /* Цвет фона */
                  color: #8c4600; /* Цвет текста */
                 }
-               </style>
+        </style>
         <title>Вход</title>
     </head>
 
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-4"></div>
-                <div class="col-8">
+                <div class="col-4">
+                    {% with messages=get_flashed_messages() %}
+                        {% if messages %}
+                            <div class ="alert alert-warning" role="alert">
+                                {% for message in messages %}
+                                    {{ message }} <br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="col-8"> <!--5-1? 3:26 Не работает так же, как там-->
                     <h2>Кто Вы?</h2>
-                    <form action="" method="POST">
+                    <form action="{{url_for('process_login')}}" method="POST">
                         {{form.hidden_tag()}}
-                        <p>
+                        <div class="form-group">
                             {{form.login.label}} <br>
                             {{form.login()}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{form.password.label}} <br>
                             {{form.password()}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="Form-group form-check"> <!--form-check - for checkbox-->
+                            {{form.remember()}}
+                            {{form.remember.label(class_='form-check-label')}}
+                        </div>                  
                             {{form.submit()}}
-                        </p>
                     </form>
                 </div>
             </div>
