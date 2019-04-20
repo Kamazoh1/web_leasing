@@ -10,6 +10,9 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 #for password encription
 
+
+
+
 GENDER=(
     ('M', 'Male'),
     ('F', 'Female'),
@@ -98,19 +101,35 @@ class Announcement (db.Model):
         return '<Announcement: {} {}, head {}, user {}>'.format (self.id, self.type, self.head, self.user_id)
 
 
+# Я решил, что все же нужна отдельная таблица иерархии. 
+class Category(db.Model):
+    __tablename__='Category'
+    id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+    name=db.Column(db.String, unique=True, nullable=False)
+    description=db.Column(db.String, unique=True, nullable=True)
+    parent_categoryid=db.Column(db.Integer, db.ForeignKey('Category.id'), index = True, unique=False, nullable=True)
+    rel_tool_id=db.relationship('Tool', back_populates='rel_category_id')
+
+    def __repr__(self):
+        return '<Category: id{} name {} parentid {}'.format(self.id, self.name, self.parent_categoryid)
+
+
 
 class Tool (db.Model):
     __tablename__='Tool'
     id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     name=db.Column(db.String, unique=True, nullable=False)
     description=db.Column(db.String, unique=True, nullable=True)
-    parent_id=db.Column(db.String, db.ForeignKey('Tool.id'), unique=False, nullable=False)
+    #parent_id=db.Column(db.String, db.ForeignKey('Tool.id'), unique=False, nullable=False)
+    # Нам по хорошему тут нужна картинка товара.
     #ForeignKeys
+    categoryid = db.Column(db.Integer, db.ForeignKey('Category.id'), index=True, unique=False, nullable=False)
     rel_ann=db.relationship('Announcement', back_populates='rel_tool_id')
+    rel_category_id=db.relationship('Category', back_populates='rel_tool_id')
     #parent_tool=db.relationship('Tool')
 
     def __repr__(self):
-        return '<Tool: id {} name {} parent {}>'.format (self.id, self.name, self.parent_id)
+        return '<Tool: id {} name {} categoryid {}>'.format (self.id, self.name, self.rel_category_id)
         
 
 
