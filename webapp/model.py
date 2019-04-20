@@ -52,26 +52,25 @@ class User (db.Model, UserMixin):
     name=db.Column(db.String, unique=False, nullable=False)
     surname=db.Column(db.String, unique=False, nullable=False)
     email=db.Column(db.String, index=True, unique=True, nullable=False)
-    login=db.Column(db.String, index=True, unique=True, nullable=False)
     password=db.Column(db.String, unique=False, nullable=False)
     rating=db.Column(db.Float, unique=False, nullable=True)
     phone=db.Column(db.String, unique=True, nullable=True)
     details=db.Column(db.String, unique=False, nullable=True)
-    gender=db.Column(ChoiceType(choices=GENDER), unique=False, nullable=False)
+    gender=db.Column(ChoiceType(choices=GENDER), unique=False, nullable=True)
     active=db.Column(db.Boolean, index=True, unique=False, nullable=False, default=True)
     role=db.Column(ChoiceType(choices=ROLE), index=True, unique=False, nullable=False)
     address=db.Column(db.String, index=True, unique=False, nullable=True)
     #ForeignKeys
     rel_ann=db.relationship('Announcement', back_populates='rel_user_id')
 
-    def ser_password (self, password):
+    def set_password (self, password):
         self.password=generate_password_hash (password)
 
     def check_password (self, password):
         return check_password_hash (self.password, password)
 
     def __repr__(self):
-        return '<User: {} {}, login {}, email {}>'.format (self.name, self.surname, self.login, self.email)
+        return '<User: {} {}, email {}>'.format (self.name, self.surname, self.email)
 
     @property
     def is_admin(self):

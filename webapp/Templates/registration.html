@@ -12,7 +12,7 @@
                  color: #8c4600; /* Цвет текста */
                 }
         </style>
-        <title>Вход</title>
+        <title>Знакомство</title>
     </head>
 
     <body>
@@ -30,21 +30,29 @@
                     {% endwith %}
                 </div>
                 <div class="col-8"> <!--5-1? 3:26 Не работает так же, как там-->
-                    <h2>Кто Вы?</h2>
-                    <form action="{{url_for('process_login')}}" method="POST">
+                    <h2>Давайте знакомиться:</h2>
+                    <form action="{{url_for('process_registration')}}" method="POST">
                         {{form.hidden_tag()}}
                         <div class="form-group">
-                            {{form.email.label}} <br>
-                            {{form.email()}}
+                            {{form.name.label}} <br>
+                            {{form.name()}}
+                        </div>
+                        <div class="form-group">
+                            {{form.surname.label}} <br>
+                            {{form.surname()}}
                         </div>
                         <div class="form-group">
                             {{form.password.label}} <br>
                             {{form.password()}}
                         </div>
-                        <div class="Form-group form-check"> <!--form-check - for checkbox-->
-                            {{form.remember()}}
-                            {{form.remember.label(class_='form-check-label')}}
-                        </div>                  
+                        <div class="form-group">
+                            {{form.email.label}} <br>
+                            {{form.email()}}
+                        </div>
+<!--                        <div class="Form-group"> <!--form-check - for checkbox
+                            {{form.gender()}}
+                            {{form.gender.label()}}
+                        </div>                  -->
                             {{form.submit()}}
                     </form>
                 </div>

@@ -12,7 +12,6 @@ from wtforms.validators import DataRequired, Email
 class RegistrationForm (FlaskForm): #наследуем форму от FlaskForm
     name=StringField('Имя пользователя', validators=[DataRequired('Введите имя')])
     surname=StringField('Фамилия пользователя', validators=[DataRequired('Введите фамилию')])
-    login=StringField('Логин пользователя', validators=[DataRequired('Какой вы хотите себе логин?')])
     password=PasswordField('Пароль', validators=[DataRequired('Какой вы хотите себе пароль?')])
     email=StringField('Адрес эл.почты', validators=[DataRequired('Какой у вас адрес электронной почты?'), Email('Тут нужен адрес электронной почты')])
     gender=RadioField('Пол', validators=[DataRequired('Какого вы пола?')])
@@ -20,7 +19,7 @@ class RegistrationForm (FlaskForm): #наследуем форму от FlaskFor
 
 
 class LoginForm (FlaskForm):
-    login=StringField('Ваш адрес электронной почты:', validators=[DataRequired('Укажите Ваш логинадрес эл.почты')])
+    email=StringField('Ваш адрес электронной почты:', validators=[DataRequired('Укажите Ваш адрес эл.почты')])
     password=PasswordField('Пароль:', validators=[DataRequired('Введите Ваш пароль')])
     remember=BooleanField('Запомнить', default=True, render_kw={"class":"form_check_input"})
     submit=SubmitField('Зайти')
