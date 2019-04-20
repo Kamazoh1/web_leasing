@@ -9,3 +9,18 @@
         <p>Ты уже местный? Тогда авторизуйся <a href="/login">здесь.</a></p>
     </body>
 </html>
+
+
+<!-- сюда надо еще вставить показ сообщений пользователю, 
+    но код ссылается на шаблоны bootstrap, 
+    поэтому текст ниже, а потом переделаем
+                    {% with messages=get_flashed_messages() %}
+                        {% if messages %}
+                            <div class ="alert alert-warning" role="alert">
+                                {% for message in messages %}
+                                    {{ message }} <br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                 -->
