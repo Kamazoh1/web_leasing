@@ -5,15 +5,15 @@ from webapp.forms import RegistrationForm, LoginForm
 from werkzeug.security import generate_password_hash, check_password_hash
 #for password encription
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from flask_migrate import Migrate
 #for managing login process
-
-
 
 def create_app():
 
     app=Flask(__name__)
     app.config.from_pyfile('../config.py')
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     login_manager=LoginManager() #экземпляр LoginManager
     login_manager.init_app (app) #init
