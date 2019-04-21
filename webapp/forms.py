@@ -14,7 +14,10 @@ class RegistrationForm (FlaskForm): #наследуем форму от FlaskFor
     surname=StringField('Фамилия пользователя', validators=[DataRequired('Введите фамилию')])
     password=PasswordField('Пароль', validators=[DataRequired('Какой вы хотите себе пароль?')])
     email=StringField('Адрес эл.почты', validators=[DataRequired('Какой у вас адрес электронной почты?'), Email('Тут нужен адрес электронной почты')])
-    gender=RadioField('Пол', validators=[DataRequired('Какого вы пола?')])
+    gender=RadioField('Пол', choices=(
+    ('M', 'Мужской'),
+    ('F', 'Женский'),
+    ('O', 'Другой')), validators=[DataRequired('Какого вы пола?')])
     submit=SubmitField('Зарегистрироваться')
 
 

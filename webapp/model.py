@@ -11,13 +11,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 #for password encription
 
 GENDER=(
-    ('M', 'Male'),
-    ('F', 'Female'),
-    ('O', 'Other'))
+    ('M', 'Мужской'),
+    ('F', 'Женский'),
+    ('O', 'Другой'))
 
 ANN_TYPE=(
-    ('L', 'Lease'),
-    ('G', 'Get'))
+    ('L', 'Взять'),
+    ('G', 'Сдать'))
     
 ROLE=(
     ('A', 'Admin'),
@@ -33,7 +33,7 @@ class ChoiceType (types.TypeDecorator):
         super(ChoiceType, self).__init__(**kw)
 
     def process_bind_param(self, value, dialect):
-        return [k for k, v in self.choices.items() if v==value][0]
+        return value
 
     def process_result_value(self, value, dialect):
         return self.choices.get(value, value)
