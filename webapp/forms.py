@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, Email, NumberRange
 from webapp.model import ANN_TYPE, GENDER, ROLE
 #validator - класс, который помогает избежать ручных проверок
 #DataRequired - проверяет, что пользователь действительно вбил данные
-
+from webapp.model import GENDER, ANN_TYPE, ROLE
 
 
 class RegistrationForm (FlaskForm): #наследуем форму от FlaskForm
@@ -22,6 +22,7 @@ class RegistrationForm (FlaskForm): #наследуем форму от FlaskFor
 class LoginForm (FlaskForm):
     email=StringField('Ваш адрес электронной почты:', validators=[DataRequired('Укажите Ваш адрес эл.почты')])
     password=PasswordField('Пароль:', validators=[DataRequired('Введите Ваш пароль')])
+<<<<<<< HEAD
     remember=BooleanField('Запомнить', default=True, render_kw={"class":"form_check_input"})
     submit=SubmitField('Зайти')
 
@@ -34,3 +35,7 @@ class AddAnnouncementForm (FlaskForm): #наследуем форму от Flask
     text=TextAreaField('Детали объявления', validators=[DataRequired('Добавьте деталей, пожалуйста')], render_kw={'class': 'form-control'})
     price=DecimalField('Цена за день', validators=[NumberRange(min=0, message='Укажите стоимость не менее 0')], render_kw={'class': 'form-control'})
     submit=SubmitField('Создать', render_kw={'class': 'btn btn-primary'})
+=======
+    remember=BooleanField('Запомнить', default=False, render_kw={"class":"form_check_input"})
+    submit=SubmitField('Зайти')
+>>>>>>> 5fde939d75b6ce04ffd2273854d35dc0a25b6a6f

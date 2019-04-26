@@ -9,7 +9,7 @@ with app.app_context():
  #   new_user.email=input ('Введите email:')
  #   input ('Введите логин:')
  #   getpass ('Введите пароль:')
-    new_user=User(name='Masha', surname='Petrova', email='a@b.ru', gender='Female', role='User')
+    new_user=User(name='Masha', surname='Petrova', email='a@b.ru', gender='Женский', role='User')
     new_user.set_password('Masha')
     print (new_user)
     db.session.add(new_user)

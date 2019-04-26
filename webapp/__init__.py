@@ -1,5 +1,5 @@
 from flask import Flask, render_template, flash, redirect, url_for
-from webapp.model import db, User, Announcement, Tool
+from webapp.model import db, User, Announcement, Tool, GENDER
 from flask_sqlalchemy import SQLAlchemy
 from webapp.forms import RegistrationForm, LoginForm, AddAnnouncementForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -40,22 +40,26 @@ def create_app():
         user_reg_form=RegistrationForm()
         return render_template('registration.html', form=user_reg_form)
 
-    @app.route('/registration_process')
+    @app.route('/registration_process', methods=['POST'])
     def process_registration():
         r_form=RegistrationForm()
         if r_form.validate_on_submit():
             if User.query.filter(User.email==r_form.email.data).count():
                 flash('Пользователь с такой эл.почтой уже есть')
                 return redirect(url_for('user_registration'))
-            password=User.set_password(r_form.password.data)
-            new_user=User(name=r_form.name.data, surname=r_form.surname.data, email=r_form.email.data, role='User')
+            #Здесь добавить отслеживание ошибок displaying error https://wtforms.readthedocs.io/en/stable/crash_course.html
+            new_user=User(name=r_form.name.data, surname=r_form.surname.data, email=r_form.email.data, gender=r_form.gender.data, role='U')
             new_user.set_password(r_form.password.data)
+            new_user.gender=r_form.gender.data
+            flash ('До записи в БД все нормально')
             db.session.add(new_user)
             try:
                 db.session.commit()
+                flash('Приятно познакомиться! Мы Вас запомнили.')
             except Exception as e:
                 flash(str(e))
-            flash('Приятно познакомиться! Мы Вас запомнили.')
+                flash('Что-то пошло не так с новым пользователем...')
+                return redirect(url_for('user_registration'))
             return redirect(url_for('user_login'))
         flash('Заполните все поля формы!')
         return redirect(url_for('user_registration'))
