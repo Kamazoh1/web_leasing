@@ -70,17 +70,20 @@ def create_app():
         ad_an_form = AddAnnouncementForm()
         return render_template('addAnnouncement.html', form=ad_an_form)
     
-    @app.route('/announcement_process')
+    @app.route('/announcement_registration', methods=['GET','POST'])
     @login_required
     def announcement_registration():
         a_form=AddAnnouncementForm()
+        tool_ = a_form.tool_id.data
         if a_form.validate_on_submit():
-            if Announcement.query.filter(Announcement.user_id==current_user.id, Announcement.tool_id==a_form.tool_id.data).count():
+            if not Announcement.query.filter(Announcement.user_id==current_user.id, Announcement.tool_id==tool_.id).count():
+            #if Announcement.query.filter(Announcement.user_id==current_user.id).count():
+
                 new_announcement=Announcement(user_id=current_user.id,
                                             type_id=a_form.type_id.data, 
                                             head=a_form.head.data, 
                                             text=a_form.text.data,
-                                            tool_id=a_form.tool_id.data,
+                                            tool_id=tool_.id,
                                             pub_datetime=datetime.now(),
                                             price=a_form.price.data,
                                             address=a_form.address.data)
@@ -90,7 +93,7 @@ def create_app():
             except Exception as e:
                 flash(str(e))
             flash('Ваше объявление успешно зарегистрировано.')
-            return redirect(url_for('/'))
+            return redirect(url_for('mainpage'))
         flash('К сожалению, нельзя иметь два объявления на один товар одновременно')
         return redirect(url_for('addAnnouncement'))
 

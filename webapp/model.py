@@ -115,7 +115,7 @@ class Category(db.Model):
 
 
 
-class Tool (db.Model):
+class Tool(db.Model):
     __tablename__='Tool'
     id=db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     name=db.Column(db.String, unique=True, nullable=False)

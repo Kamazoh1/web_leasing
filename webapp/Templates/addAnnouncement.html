@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-8"> <!--5-1? 3:26 Не работает так же, как там-->
                     <h2>LДобавьте объявление:</h2>
-                    <form action="{{url_for('announcement_process')}}" method="POST">
+                    <form action="{{url_for('announcement_registration')}}" method="POST">
                         {{form.hidden_tag()}}
                         <div class="form-group">
                             {{form.type_id.label}} <br>
@@ -40,10 +40,12 @@
                             {{form.head.label}} <br>
                             {{form.head()}}
                         </div>
+
                         <div class="form-group">
-                            {{form.tool.label}} <br>
-                            {{form.tool()}}
+                            {{form.tool_id.label}} <br>
+                            {{form.tool_id()}}
                         </div>
+
                         <div class="form-group">
                             {{form.text.label}} <br>
                             {{form.text()}}
@@ -52,10 +54,10 @@
                             {{form.price.label}} <br>
                             {{form.price()}}
                         </div>
-<!--                        <div class="Form-group"> <!--form-check - for checkbox
-                            {{form.gender()}}
-                            {{form.gender.label()}}
-                        </div>                  -->
+                        <div class="form-group">
+                            {{form.address.label}} <br>
+                            {{form.address()}}
+                        </div>
                             {{form.submit()}}
                     </form>
                 </div>
