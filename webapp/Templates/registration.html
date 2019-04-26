@@ -1,64 +1,32 @@
-<!doctype html>
-<html lang="ru">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <style>
-                body {
-                 background: #FFC817; /* Цвет фона */
-                 color: #8c4600; /* Цвет текста */
-                }
-        </style>
-        <title>Знакомство</title>
-    </head>
+{% extends "base.html" %}
 
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-4">
-                    {% with messages=get_flashed_messages() %}
-                        {% if messages %}
-                            <div class ="alert alert-warning" role="alert">
-                                {% for message in messages %}
-                                    {{ message }} <br>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                </div>
-                <div class="col-8"> <!--5-1? 3:26 Не работает так же, как там-->
-                    <h2>Давайте знакомиться:</h2>
-                    <form action="{{url_for('process_registration')}}" method="POST">
-                        {{form.hidden_tag()}}
-                        <div class="form-group">
-                            {{form.name.label}} <br>
-                            {{form.name()}}
-                        </div>
-                        <div class="form-group">
-                            {{form.surname.label}} <br>
-                            {{form.surname()}}
-                        </div>
-                        <div class="form-group">
-                            {{form.password.label}} <br>
-                            {{form.password()}}
-                        </div>
-                        <div class="form-group">
-                            {{form.email.label}} <br>
-                            {{form.email()}}
-                        </div>
-                        <div class="Form-group"> <!--form-check - for checkbox-->
-                            <br>
-                            {{form.gender.label()}}                            
-                            {{form.gender()}}
-                        </div>             
-                        <br>     
-                            {{form.submit()}}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+{% block content %}
+
+<h2>Давайте знакомиться:</h2>
+<form action="{{url_for('process_registration')}}" method="POST">
+    {{form.hidden_tag()}}
+    <div class="form-group">
+        {{form.name.label}} <br>
+        {{form.name()}}
+    </div>
+    <div class="form-group">
+        {{form.surname.label}} <br>
+        {{form.surname()}}
+    </div>
+    <div class="form-group">
+        {{form.password.label}} <br>
+        {{form.password()}}
+    </div>
+    <div class="form-group">
+        {{form.email.label}} <br>
+        {{form.email()}}
+    </div>
+    <div class="Form-group"> <!--form-check - for checkbox-->
+        <br>
+        {{form.gender.label()}}                            
+        {{form.gender()}}
+    </div>             
+    <br>     
+        {{form.submit()}}
+</form>
+{% endblock %}
