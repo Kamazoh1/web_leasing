@@ -1,11 +1,12 @@
 from flask import Flask, render_template, flash, redirect, url_for
 from webapp.model import db, User, Announcement, Tool
 from flask_sqlalchemy import SQLAlchemy
-from webapp.forms import RegistrationForm, LoginForm
+from webapp.forms import RegistrationForm, LoginForm, AddAnnouncementForm
 from werkzeug.security import generate_password_hash, check_password_hash
 #for password encription
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_migrate import Migrate
+from datetime import datetime
 #for managing login process
 
 def create_app():
@@ -58,6 +59,36 @@ def create_app():
             return redirect(url_for('user_login'))
         flash('Заполните все поля формы!')
         return redirect(url_for('user_registration'))
+
+    @app.route('/addAnnouncement')
+    @login_required
+    def add_announcement():
+        ad_an_form = AddAnnouncementForm()
+        return render_template('addAnnouncement.html', form=ad_an_form)
+    
+    @app.route('/announcement_process')
+    @login_required
+    def announcement_registration():
+        a_form=AddAnnouncementForm()
+        if a_form.validate_on_submit():
+            if Announcement.query.filter(Announcement.user_id==current_user.id, Announcement.tool_id==a_form.tool_id.data).count():
+                new_announcement=Announcement(user_id=current_user.id,
+                                            type_id=a_form.type_id.data, 
+                                            head=a_form.head.data, 
+                                            text=a_form.text.data,
+                                            tool_id=a_form.tool_id.data,
+                                            pub_datetime=datetime.now(),
+                                            price=a_form.price.data,
+                                            address=a_form.address.data)
+                db.session.add(new_announcement)
+            try:
+                db.session.commit()
+            except Exception as e:
+                flash(str(e))
+            flash('Ваше объявление успешно зарегистрировано.')
+            return redirect(url_for('/'))
+        flash('К сожалению, нельзя иметь два объявления на один товар одновременно')
+        return redirect(url_for('addAnnouncement'))
 
     @app.route('/login')
     def user_login():
