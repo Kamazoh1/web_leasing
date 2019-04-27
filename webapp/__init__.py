@@ -64,6 +64,42 @@ def create_app():
         flash('Заполните все поля формы!')
         return redirect(url_for('user_registration'))
 
+<<<<<<< HEAD
+=======
+    @app.route('/addAnnouncement')
+    @login_required
+    def add_announcement():
+        ad_an_form = AddAnnouncementForm()
+        return render_template('addAnnouncement.html', form=ad_an_form)
+    
+    @app.route('/announcement_registration', methods=['GET','POST'])
+    @login_required
+    def announcement_registration():
+        a_form=AddAnnouncementForm()
+        tool_ = a_form.tool_id.data
+        if a_form.validate_on_submit():
+            if not Announcement.query.filter(Announcement.user_id==current_user.id, Announcement.tool_id==tool_.id).count():
+            #if Announcement.query.filter(Announcement.user_id==current_user.id).count():
+
+                new_announcement=Announcement(user_id=current_user.id,
+                                            type_id=a_form.type_id.data, 
+                                            head=a_form.head.data, 
+                                            text=a_form.text.data,
+                                            tool_id=tool_.id,
+                                            pub_datetime=datetime.now(),
+                                            price=a_form.price.data,
+                                            address=a_form.address.data)
+                db.session.add(new_announcement)
+            try:
+                db.session.commit()
+            except Exception as e:
+                flash(str(e))
+            flash('Ваше объявление успешно зарегистрировано.')
+            return redirect(url_for('mainpage'))
+        flash('К сожалению, нельзя иметь два объявления на один товар одновременно')
+        return redirect(url_for('addAnnouncement'))
+
+>>>>>>> e35cc83187658b4134fe942009cf58cc5ae17176
     @app.route('/login')
     def user_login():
         if current_user.is_authenticated:
