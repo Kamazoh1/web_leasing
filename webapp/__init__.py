@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for
+from flask import Flask, render_template, flash, redirect, url_for, abort, Blueprint
 from webapp.model import db, User, Announcement, Tool, GENDER
 from flask_sqlalchemy import SQLAlchemy
 from webapp.forms import RegistrationForm, LoginForm, AddAnnouncementForm
@@ -157,6 +157,16 @@ def create_app():
         except Exception as e:
             return (str(e))
 
+    @app.route('/announcement/<int:announcement_id>')
+    def single_announcement(announcement_id):
+        try:
+            my_announcement = Announcement.query.filter(Announcement.id == announcement_id).first()
+            my_user = User.query.filter(User.id == current_user.id).first()
+            if not my_announcement:
+                abort(404)
+            return render_template('announcement_details.html', page_title=my_announcement.head, ann=my_announcement, user=my_user.name)
+        except Exception as e:
+            return(str(e))
 
     @app.route('/test_db')
     def test_01():

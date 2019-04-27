@@ -5,7 +5,7 @@ username - имя пользователя, но не id-->
 {% block content %}
     <h1>Все объявления:</h1>
     {% for ann in ann_set %}
-        <p>{{ann.tool_id}}.  {{ann.head}}<br>
+        <p>{{ann.tool_id}}.  <a href=/announcement/{{ ann.id }}>{{ann.head}}</a><br>
         {{ann.pub_datetime}} <br>
         Пользователь: {{ann.user_id}}</p>
     {% endfor %}
