@@ -1,0 +1,13 @@
+<!-- передаются следующие переменные:
+ann_set - список объявлений
+username - имя пользователя, но не id-->
+{% extends "base.html" %}
+{% block content %}
+    <h1>Все объявления:</h1>
+    {% for ann in ann_set %}
+        <h3>{{ann.tool_id}}.  {{ann.head}}</h3>
+        <p>{{ann.pub_datetime.text}} </p>
+        <p>Пользователь: {{username}}</p>
+    {% endfor %}
+
+{% endblock %}

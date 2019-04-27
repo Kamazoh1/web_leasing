@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for
 from webapp.model import db, User, Announcement, Tool, GENDER
 from flask_sqlalchemy import SQLAlchemy
-from webapp.forms import RegistrationForm, LoginForm, AddAnnouncementForm
+from webapp.forms import RegistrationForm, LoginForm
 from werkzeug.security import generate_password_hash, check_password_hash
 #for password encription
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
@@ -51,7 +51,7 @@ def create_app():
             new_user=User(name=r_form.name.data, surname=r_form.surname.data, email=r_form.email.data, gender=r_form.gender.data, role='U')
             new_user.set_password(r_form.password.data)
             new_user.gender=r_form.gender.data
-            flash ('До записи в БД все нормально')
+            #flash ('До записи в БД все нормально')
             db.session.add(new_user)
             try:
                 db.session.commit()
@@ -63,36 +63,6 @@ def create_app():
             return redirect(url_for('user_login'))
         flash('Заполните все поля формы!')
         return redirect(url_for('user_registration'))
-
-    @app.route('/addAnnouncement')
-    @login_required
-    def add_announcement():
-        ad_an_form = AddAnnouncementForm()
-        return render_template('addAnnouncement.html', form=ad_an_form)
-    
-    @app.route('/announcement_process')
-    @login_required
-    def announcement_registration():
-        a_form=AddAnnouncementForm()
-        if a_form.validate_on_submit():
-            if Announcement.query.filter(Announcement.user_id==current_user.id, Announcement.tool_id==a_form.tool_id.data).count():
-                new_announcement=Announcement(user_id=current_user.id,
-                                            type_id=a_form.type_id.data, 
-                                            head=a_form.head.data, 
-                                            text=a_form.text.data,
-                                            tool_id=a_form.tool_id.data,
-                                            pub_datetime=datetime.now(),
-                                            price=a_form.price.data,
-                                            address=a_form.address.data)
-                db.session.add(new_announcement)
-            try:
-                db.session.commit()
-            except Exception as e:
-                flash(str(e))
-            flash('Ваше объявление успешно зарегистрировано.')
-            return redirect(url_for('/'))
-        flash('К сожалению, нельзя иметь два объявления на один товар одновременно')
-        return redirect(url_for('addAnnouncement'))
 
     @app.route('/login')
     def user_login():
@@ -132,6 +102,22 @@ def create_app():
         else:
             return 'А тебе сюда низзя!'
             #redirect(url_for('user_login'))
+
+    @app.route('/announcements')
+    @login_required
+    def show_announcements():
+        try:
+            ann_set=Announcement.query.all()
+            print('из БД скачалось')
+            for i in ann_set:
+                i.pub_datetime= datetime.strptime(i.pub_datetime, '%d-%m-%y')
+            #print (str(ann_set[0]))
+            return render_template('announcement_list.html', ann_set=ann_set)
+        except Exception as e:
+            print(str(e))
+            flash(str(e))
+            return str(e)
+
 
     @app.route('/test_db')
     def test_01():

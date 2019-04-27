@@ -22,7 +22,7 @@ class RegistrationForm (FlaskForm): #наследуем форму от FlaskFor
 class LoginForm (FlaskForm):
     email=StringField('Ваш адрес электронной почты:', validators=[DataRequired('Укажите Ваш адрес эл.почты')])
     password=PasswordField('Пароль:', validators=[DataRequired('Введите Ваш пароль')])
-    remember=BooleanField('Запомнить', default=True, render_kw={"class":"form_check_input"})
+    remember=BooleanField('Запомнить', default=False, render_kw={"class":"form_check_input"})
     submit=SubmitField('Зайти')
 
 
