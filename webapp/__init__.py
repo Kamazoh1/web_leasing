@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for
 from webapp.model import db, User, Announcement, Tool, GENDER
 from flask_sqlalchemy import SQLAlchemy
-from webapp.forms import RegistrationForm, LoginForm
+from webapp.forms import RegistrationForm, LoginForm, AddAnnouncementForm
 from werkzeug.security import generate_password_hash, check_password_hash
 #for password encription
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
@@ -64,8 +64,6 @@ def create_app():
         flash('Заполните все поля формы!')
         return redirect(url_for('user_registration'))
 
-<<<<<<< HEAD
-=======
     @app.route('/addAnnouncement')
     @login_required
     def add_announcement():
@@ -97,9 +95,8 @@ def create_app():
             flash('Ваше объявление успешно зарегистрировано.')
             return redirect(url_for('mainpage'))
         flash('К сожалению, нельзя иметь два объявления на один товар одновременно')
-        return redirect(url_for('addAnnouncement'))
+        return redirect(url_for('add_announcement'))
 
->>>>>>> e35cc83187658b4134fe942009cf58cc5ae17176
     @app.route('/login')
     def user_login():
         if current_user.is_authenticated:
@@ -144,15 +141,21 @@ def create_app():
     def show_announcements():
         try:
             ann_set=Announcement.query.all()
-            print('из БД скачалось')
-            for i in ann_set:
-                i.pub_datetime= datetime.strptime(i.pub_datetime, '%d-%m-%y')
-            #print (str(ann_set[0]))
             return render_template('announcement_list.html', ann_set=ann_set)
         except Exception as e:
             print(str(e))
-            flash(str(e))
             return str(e)
+
+    @app.route('/announcement_details')
+    @login_required
+    def show_1ann():
+        ann_id=1
+        try:
+            ann=Announcement.query.filter(Announcement.id==ann_id).first()
+            user=User.query.filter(User.id==ann.user_id).first()
+            return render_template ('announcement_details.html', ann=ann, username=user.name)
+        except Exception as e:
+            return (str(e))
 
 
     @app.route('/test_db')

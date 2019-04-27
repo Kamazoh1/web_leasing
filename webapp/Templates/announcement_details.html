@@ -3,11 +3,12 @@ ann - объявление
 username - имя пользователя-->
 {% extends "base.html" %}
 {% block content %}
-    <h3>Тип: {{ann.type}}</h3>
-    <h3>Заголовок: {{ann.head}}</h3>
-    <p>Дата публикации: {{ann.pub_datetime}}</p>
-    <p>Автор: {{ann.address}}</p>
-    <p>Текст: {{ann.text}}</p>
-    <p>Цена: {{ann.price}}</p>
+    <h4>Тип: {{ann.type_id}}</h3>
+    <h4>Заголовок: {{ann.head}}</h3>
+    <p>Дата публикации: {{ann.pub_datetime}}<br>
+    Автор: {{username}} <br>
+    Адрес: {{ann.address}} <br>
+    Текст: {{ann.text}}<br>
+    Цена: {{ann.price}}</p>
 
 {% endblock %}
